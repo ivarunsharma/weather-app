@@ -1,0 +1,333 @@
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+}
+
+:root {
+    --spacing-medium: 8px;
+    --spacing-regular: 16px;
+
+    --font-regular: 1rem;
+    --font-large: 2rem;
+    --font-xl: 4rem;
+    --font-semibold: 600;
+
+    --glass-light: rgba(255, 255, 255, 0.2);
+    --glass-light-border: rgba(255, 255, 255, 0.35);
+    --glass-dark: rgba(0, 0, 0, 0.35);
+    --glass-dark-border: rgba(255, 255, 255, 0.12);
+}
+
+h1,
+h2 {
+    margin: 0;
+}
+
+p {
+    margin: var(--spacing-medium);
+}
+
+body {
+    margin: var(--spacing-regular) auto;
+    max-width: 800px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #1a1a2e;
+    transition: color 0.3s;
+}
+
+body.night-mode {
+    color: white;
+}
+
+/* Background video */
+
+#background-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+/* Loading overlay */
+
+.loading {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.loading.hidden {
+    display: none;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Error toast */
+
+#error-message {
+    position: fixed;
+    top: var(--spacing-regular);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(200, 40, 40, 0.92);
+    color: white;
+    padding: var(--spacing-medium) var(--spacing-regular);
+    border-radius: var(--spacing-medium);
+    z-index: 40;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-weight: var(--font-semibold);
+    white-space: nowrap;
+}
+
+#error-message.hidden {
+    display: none;
+}
+
+/* Grid layout */
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas:
+        "search search"
+        "current current"
+        "hourly hourly"
+        "fiveday fiveday"
+        "feelslike humidity";
+    gap: var(--spacing-regular);
+    padding: var(--spacing-regular);
+}
+
+/* Glass cards */
+
+.container > article {
+    background: var(--glass-light);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-light-border);
+    border-radius: var(--spacing-regular);
+    padding: var(--spacing-regular);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+body.night-mode .container > article {
+    background: var(--glass-dark);
+    border-color: var(--glass-dark-border);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Search row */
+
+.search-wrapper {
+    grid-area: search;
+    display: flex;
+    gap: var(--spacing-medium);
+    align-items: center;
+}
+
+#search {
+    flex: 1;
+    font-size: var(--font-large);
+    border-radius: var(--spacing-regular);
+    padding: var(--spacing-medium) var(--spacing-regular);
+    background: var(--glass-light);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-light-border);
+    color: inherit;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#search:focus {
+    border-color: rgba(255, 255, 255, 0.65);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+#search::placeholder {
+    color: rgba(0, 0, 0, 0.45);
+}
+
+body.night-mode #search {
+    background: var(--glass-dark);
+    border-color: var(--glass-dark-border);
+}
+
+body.night-mode #search::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.unit-toggle {
+    padding: var(--spacing-medium) var(--spacing-regular);
+    border-radius: var(--spacing-regular);
+    border: 1px solid var(--glass-light-border);
+    background: var(--glass-light);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    cursor: pointer;
+    font-size: var(--font-regular);
+    font-weight: var(--font-semibold);
+    color: inherit;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+    min-width: 52px;
+}
+
+.unit-toggle:hover {
+    background: rgba(255, 255, 255, 0.38);
+}
+
+.unit-toggle:active {
+    transform: scale(0.95);
+}
+
+body.night-mode .unit-toggle {
+    background: var(--glass-dark);
+    border-color: var(--glass-dark-border);
+}
+
+body.night-mode .unit-toggle:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Current forecast */
+
+#current-forecast {
+    grid-area: current;
+    text-align: center;
+}
+
+#current-forecast .temp {
+    font-size: var(--font-xl);
+    margin: 0;
+}
+
+#current-forecast .description {
+    text-transform: capitalize;
+}
+
+#current-forecast .min-max-temp,
+#current-forecast .description {
+    font-size: var(--font-regular);
+    font-weight: var(--font-semibold);
+}
+
+#current-forecast .wind {
+    font-size: 0.875rem;
+    opacity: 0.75;
+}
+
+/* Hourly forecast */
+
+#hourly-forecast {
+    grid-area: hourly;
+    text-align: center;
+}
+
+#hourly-forecast .hourly-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(100px, 1fr);
+    overflow-x: auto;
+    gap: var(--spacing-medium);
+}
+
+#hourly-forecast .hourly-container .icon {
+    height: 100px;
+    width: 100px;
+    object-fit: contain;
+}
+
+#hourly-forecast .hourly-container .hourly-temp {
+    font-size: var(--font-regular);
+    font-weight: var(--font-semibold);
+}
+
+/* 5-day forecast */
+
+#five-day-forecast {
+    grid-area: fiveday;
+    text-align: center;
+}
+
+#five-day-forecast .five-day-forecast-container {
+    display: grid;
+    grid-auto-flow: row;
+}
+
+.five-day-forecast-container .day-wise-forecast {
+    display: grid;
+    grid-template: auto / repeat(4, 1fr);
+    gap: var(--spacing-regular);
+    place-items: center;
+}
+
+.five-day-forecast-container .day-wise-forecast .min-temp,
+.five-day-forecast-container .day-wise-forecast .max-temp {
+    font-size: var(--font-regular);
+    font-weight: var(--font-semibold);
+}
+
+.five-day-forecast-container .day-wise-forecast .min-temp {
+    opacity: 50%;
+}
+
+.five-day-forecast-container .day-wise-forecast .max-temp {
+    justify-self: end;
+}
+
+.five-day-forecast-container .day-wise-forecast .icon {
+    width: 75px;
+    height: 75px;
+}
+
+.five-day-forecast-container .day-wise-forecast .day {
+    text-transform: capitalize;
+    justify-self: start;
+}
+
+/* Feels like / Humidity */
+
+#feels-like {
+    grid-area: feelslike;
+    text-align: center;
+}
+
+#humidity {
+    grid-area: humidity;
+    text-align: center;
+}
+
+/* Desktop layout */
+
+@media (width >= 650px) {
+    .container {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-areas:
+            "search search search search"
+            "current current current current"
+            "hourly hourly fiveday fiveday"
+            "feelslike humidity fiveday fiveday";
+    }
+}
